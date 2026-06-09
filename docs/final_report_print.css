@@ -1,0 +1,87 @@
+@page {
+  size: A4;
+  margin: 2.2cm 2cm 2.2cm 2cm;
+  @bottom-center {
+    content: counter(page);
+    font-family: "Times New Roman", serif;
+    font-size: 10pt;
+  }
+}
+
+html {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12pt;
+  line-height: 1.15;
+  color: #111;
+  background: #fff;
+}
+
+body {
+  max-width: 100%;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Times New Roman", Times, serif;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 18pt;
+  margin-top: 1.4em;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 15pt;
+  margin-top: 1.1em;
+}
+
+h3 {
+  font-size: 13pt;
+}
+
+p {
+  text-align: justify;
+  margin: 0.45em 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  page-break-inside: avoid;
+}
+
+th,
+td {
+  border: 1px solid #555;
+  padding: 0.35em 0.45em;
+  vertical-align: top;
+}
+
+th {
+  font-weight: bold;
+  background: #f2f2f2;
+}
+
+pre,
+code {
+  font-family: "Courier New", monospace;
+  font-size: 10pt;
+}
+
+a {
+  color: #111;
+  text-decoration: none;
+}
+
+#toc,
+nav#TOC {
+  page-break-after: always;
+}
+

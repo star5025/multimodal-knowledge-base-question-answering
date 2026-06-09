@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="JC3506 Software Design and Implementation Group Project" />
+  <meta name="dcterms.date" content="2026-01-01" />
+  <title>Final Report: Multimodal Personal Knowledge Base Question Answering System</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="final_report_print.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Final Report: Multimodal Personal Knowledge Base
+Question Answering System</h1>
+<p class="author">JC3506 Software Design and Implementation Group
+Project</p>
+<p class="date">2026</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a
+href="#final-report-multimodal-personal-knowledge-base-question-answering-system"
+id="toc-final-report-multimodal-personal-knowledge-base-question-answering-system">Final
+Report: Multimodal Personal Knowledge Base Question Answering System</a>
+<ul>
+<li><a href="#executive-summary" id="toc-executive-summary">Executive
+Summary</a></li>
+</ul></li>
+<li><a href="#introduction-and-system-overview"
+id="toc-introduction-and-system-overview">1. Introduction and System
+Overview</a>
+<ul>
+<li><a href="#problem-context" id="toc-problem-context">1.1 Problem
+Context</a></li>
+<li><a href="#project-aim" id="toc-project-aim">1.2 Project Aim</a></li>
+<li><a href="#target-users" id="toc-target-users">1.3 Target
+Users</a></li>
+<li><a href="#resulting-system-overview"
+id="toc-resulting-system-overview">1.4 Resulting System
+Overview</a></li>
+<li><a href="#scope" id="toc-scope">1.5 Scope</a></li>
+</ul></li>
+<li><a href="#system-design" id="toc-system-design">2. System Design</a>
+<ul>
+<li><a href="#design-goals" id="toc-design-goals">2.1 Design
+Goals</a></li>
+<li><a href="#high-level-architecture"
+id="toc-high-level-architecture">2.2 High-Level Architecture</a></li>
+<li><a href="#backend-component-design"
+id="toc-backend-component-design">2.3 Backend Component Design</a></li>
+<li><a href="#frontend-component-design"
+id="toc-frontend-component-design">2.4 Frontend Component
+Design</a></li>
+<li><a href="#data-flow-document-upload"
+id="toc-data-flow-document-upload">2.5 Data Flow: Document
+Upload</a></li>
+<li><a href="#data-flow-question-answering"
+id="toc-data-flow-question-answering">2.6 Data Flow: Question
+Answering</a></li>
+<li><a href="#interface-design" id="toc-interface-design">2.7 Interface
+Design</a></li>
+<li><a href="#privacy-and-security-design"
+id="toc-privacy-and-security-design">2.8 Privacy and Security
+Design</a></li>
+<li><a href="#design-rationale" id="toc-design-rationale">2.9 Design
+Rationale</a></li>
+</ul></li>
+<li><a href="#implementation" id="toc-implementation">3.
+Implementation</a>
+<ul>
+<li><a href="#technology-stack" id="toc-technology-stack">3.1 Technology
+Stack</a></li>
+<li><a href="#repository-structure" id="toc-repository-structure">3.2
+Repository Structure</a></li>
+<li><a href="#backend-implementation"
+id="toc-backend-implementation">3.3 Backend Implementation</a></li>
+<li><a href="#frontend-implementation"
+id="toc-frontend-implementation">3.4 Frontend Implementation</a></li>
+<li><a href="#rag-prompt-and-answer-generation"
+id="toc-rag-prompt-and-answer-generation">3.5 RAG Prompt and Answer
+Generation</a></li>
+<li><a href="#error-handling" id="toc-error-handling">3.6 Error
+Handling</a></li>
+<li><a href="#configuration" id="toc-configuration">3.7
+Configuration</a></li>
+<li><a href="#application-of-design-principles"
+id="toc-application-of-design-principles">3.8 Application of Design
+Principles</a></li>
+<li><a href="#significant-technical-challenges"
+id="toc-significant-technical-challenges">3.9 Significant Technical
+Challenges</a></li>
+<li><a href="#data-model-and-persistence-details"
+id="toc-data-model-and-persistence-details">3.10 Data Model and
+Persistence Details</a></li>
+<li><a href="#api-and-contract-stability"
+id="toc-api-and-contract-stability">3.11 API and Contract
+Stability</a></li>
+<li><a href="#testing-strategy" id="toc-testing-strategy">3.12 Testing
+Strategy</a></li>
+<li><a href="#deployment-and-operation"
+id="toc-deployment-and-operation">3.13 Deployment and Operation</a></li>
+</ul></li>
+<li><a href="#development-process" id="toc-development-process">4.
+Development Process</a>
+<ul>
+<li><a href="#methodology" id="toc-methodology">4.1 Methodology</a></li>
+<li><a href="#iteration-strategy" id="toc-iteration-strategy">4.2
+Iteration Strategy</a></li>
+<li><a href="#milestone-progression" id="toc-milestone-progression">4.3
+Milestone Progression</a></li>
+<li><a href="#adaptations-during-development"
+id="toc-adaptations-during-development">4.4 Adaptations During
+Development</a></li>
+<li><a href="#teamwork-and-role-reflection"
+id="toc-teamwork-and-role-reflection">4.5 Teamwork and Role
+Reflection</a></li>
+<li><a href="#use-of-ai-assisted-tools"
+id="toc-use-of-ai-assisted-tools">4.6 Use of AI-Assisted Tools</a></li>
+</ul></li>
+<li><a href="#evaluation-of-outcomes" id="toc-evaluation-of-outcomes">5.
+Evaluation of Outcomes</a>
+<ul>
+<li><a href="#evaluation-approach" id="toc-evaluation-approach">5.1
+Evaluation Approach</a></li>
+<li><a href="#requirement-satisfaction"
+id="toc-requirement-satisfaction">5.2 Requirement Satisfaction</a></li>
+<li><a href="#automated-verification"
+id="toc-automated-verification">5.3 Automated Verification</a></li>
+<li><a href="#functional-strengths" id="toc-functional-strengths">5.4
+Functional Strengths</a></li>
+<li><a href="#technical-strengths" id="toc-technical-strengths">5.5
+Technical Strengths</a></li>
+<li><a href="#limitations" id="toc-limitations">5.6 Limitations</a></li>
+<li><a href="#outcome-against-course-objectives"
+id="toc-outcome-against-course-objectives">5.7 Outcome Against Course
+Objectives</a></li>
+<li><a href="#reflection-on-project-process"
+id="toc-reflection-on-project-process">5.8 Reflection on Project
+Process</a></li>
+<li><a href="#evaluation-of-non-functional-qualities"
+id="toc-evaluation-of-non-functional-qualities">5.9 Evaluation of
+Non-Functional Qualities</a></li>
+<li><a href="#risk-analysis" id="toc-risk-analysis">5.10 Risk
+Analysis</a></li>
+<li><a href="#ethical-and-professional-considerations"
+id="toc-ethical-and-professional-considerations">5.11 Ethical and
+Professional Considerations</a></li>
+<li><a href="#overall-outcome" id="toc-overall-outcome">5.12 Overall
+Outcome</a></li>
+</ul></li>
+<li><a href="#conclusion-and-future-work"
+id="toc-conclusion-and-future-work">6. Conclusion and Future Work</a>
+<ul>
+<li><a href="#conclusion" id="toc-conclusion">6.1 Conclusion</a></li>
+<li><a href="#future-work" id="toc-future-work">6.2 Future Work</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+<li><a
+href="#appendix-a-mapping-of-assessment-expectations-to-report-content"
+id="toc-appendix-a-mapping-of-assessment-expectations-to-report-content">Appendix
+A: Mapping of Assessment Expectations to Report Content</a></li>
+<li><a href="#appendix-b-proof-of-concept-feature-summary"
+id="toc-appendix-b-proof-of-concept-feature-summary">Appendix B:
+Proof-of-Concept Feature Summary</a></li>
+<li><a href="#appendix-c-installation-and-demonstration-notes"
+id="toc-appendix-c-installation-and-demonstration-notes">Appendix C:
+Installation and Demonstration Notes</a></li>
+</ul>
+</nav>
+<h1
+id="final-report-multimodal-personal-knowledge-base-question-answering-system">Final
+Report: Multimodal Personal Knowledge Base Question Answering
+System</h1>
+<p><strong>Course:</strong> JC3506 Software Design and
+Implementation<br />
+<strong>Assessment component:</strong> Final Report<br />
+<strong>Project:</strong> Multimodal Personal Knowledge Base Question
+Answering System<br />
+<strong>Group:</strong> [Insert group number]<br />
+<strong>Team members:</strong> [Insert team member names]<br />
+<strong>Submission date:</strong> [Insert submission date]</p>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This report presents the design, implementation, development process,
+and evaluation of a Multimodal Personal Knowledge Base Question
+Answering System. The project addresses a practical problem faced by
+students, researchers, and privacy-sensitive users: personal knowledge
+is often distributed across PDF files, scanned images, handwritten or
+photographed notes, and plain text files, while conventional file
+systems provide only filename-level organisation and keyword search.
+Users may know that a concept appears somewhere in their materials, but
+locating the relevant page, paragraph, or image can be slow and
+unreliable. At the same time, fully cloud-based knowledge tools
+introduce privacy concerns because original documents may need to be
+uploaded to external servers.</p>
+<p>The implemented system is a local-first web application that supports
+user authentication, document upload, document management, text
+extraction from text files and PDFs, image OCR through Tesseract where
+available, text cleaning, chunking, local metadata storage, retrieval,
+question answering, and citation display. The backend is implemented
+using FastAPI and SQLite, while the frontend is implemented using React,
+Vite, and TypeScript. The retrieval layer is designed to use
+SentenceTransformers and FAISS when the optional machine learning
+dependencies are installed, and it also includes a local lexical
+fallback to ensure that the proof-of-concept remains demonstrable in
+restricted environments. Generated answers are produced through the
+official DeepSeek API when a DeepSeek API key is configured. If the key
+is absent or the external call fails, the system falls back to an
+extractive answer based on retrieved local chunks, preserving the
+end-to-end demonstration workflow.</p>
+<p>The system was developed iteratively from the original project
+proposal into a working proof-of-concept. The implementation prioritises
+architectural clarity, local data ownership, demonstrability, and
+traceable outputs. It does not attempt to become a commercial-scale
+cloud platform or enterprise knowledge management suite. Instead, it
+focuses on the core pipeline required by the project: upload, parse,
+index, retrieve, answer, and cite. Evaluation shows that the implemented
+proof-of-concept satisfies the central project objectives, while also
+revealing limitations around OCR installation, semantic retrieval
+dependency size, answer quality under fallback mode, and the need for
+broader usability testing. The report concludes by identifying realistic
+future improvements, including richer document viewers, background
+processing, encrypted local storage, improved retrieval ranking, and
+more complete evaluation datasets.</p>
+<h1 id="introduction-and-system-overview">1. Introduction and System
+Overview</h1>
+<h2 id="problem-context">1.1 Problem Context</h2>
+<p>Modern study and professional work increasingly produce fragmented
+personal knowledge. A single user may accumulate lecture notes, academic
+papers, scanned handouts, project documents, meeting notes, screenshots,
+photographs of whiteboards, technical manuals, and personal records.
+These files often contain valuable information, but their value is
+reduced when the user cannot quickly retrieve relevant content. Ordinary
+file systems provide folders, filenames, dates, and sometimes basic
+full-text search. However, they do not provide a natural language
+interface that lets users ask questions such as “Which document explains
+retrieval augmented generation?”, “Where is the privacy requirement
+discussed?”, or “Which scanned note mentions the evaluation method?”</p>
+<p>The problem becomes more complex when documents are multimodal. A PDF
+may contain embedded text, scanned pages, tables, diagrams, or
+references. An image may contain printed or handwritten text. A user may
+not remember whether information came from a PDF, a screenshot, or a
+text note. Keyword search is often insufficient because users ask in
+different words from those used in the document. For example, a user may
+ask about “local data protection” while the document uses
+“privacy-preserving local storage”. This motivates a system that can
+extract text from heterogeneous files, create searchable
+representations, retrieve relevant content, and generate an answer
+grounded in the user’s own documents.</p>
+<p>Privacy is also a central consideration. Many existing AI
+knowledge-base products rely on cloud document ingestion. This can be
+useful, but it is not always acceptable for personal records, course
+materials, research notes, financial documents, medical information, or
+private journals. The project therefore adopts a local-first approach:
+original files, extracted content, metadata, and retrieval indexes are
+stored locally. Only selected retrieved text fragments are sent to an
+external large language model when the user explicitly configures an API
+key. This design balances the practicality of modern language models
+with the privacy benefits of local storage and local retrieval.</p>
+<h2 id="project-aim">1.2 Project Aim</h2>
+<p>The aim of the project is to design and implement a software-centric
+proof-of-concept for a multimodal personal knowledge base question
+answering system. The system should demonstrate that a user can upload
+documents, have them processed locally, ask natural language questions,
+and receive answers with citations to supporting document fragments. The
+implementation is expected to reflect sound software design principles,
+clear architectural separation, and practical development decisions.</p>
+<p>The intended result is not a complete commercial product. Instead,
+the result is a technically credible proof-of-concept that validates the
+design direction. The implementation should be stable enough for
+demonstration, easy enough for users to operate locally, and structured
+enough to support future extension.</p>
+<h2 id="target-users">1.3 Target Users</h2>
+<p>The project targets three main user groups.</p>
+<p>First, students need to manage course handouts, lecture notes,
+academic articles, screenshots, and revision materials. A student may
+want to ask where a concept appears, compare explanations across
+documents, or retrieve a citation from an uploaded paper. For this
+group, the important requirements are usability, quick upload, simple
+document management, and answer traceability.</p>
+<p>Second, researchers and knowledge workers need to manage project
+documentation, meeting notes, technical manuals, papers, and
+experimental records. They need cross-document retrieval, source
+attribution, and the ability to ask follow-up questions without manually
+re-reading large document collections. For this group, citation quality
+and retrieval transparency are especially important.</p>
+<p>Third, privacy-sensitive users need to manage documents that should
+not be freely uploaded to cloud storage. These may include financial
+records, medical reports, contracts, or private notes. For this group,
+local storage, local retrieval, and controlled external transmission are
+core design constraints rather than optional features.</p>
+<h2 id="resulting-system-overview">1.4 Resulting System Overview</h2>
+<p>The implemented system is a browser-accessible local web application.
+It consists of a React frontend and a FastAPI backend running on the
+user’s machine. Users access the frontend through a local development
+URL, typically <code>http://127.0.0.1:5173</code>, while the API runs at
+<code>http://127.0.0.1:8000</code>. The backend stores data in local
+directories and a local SQLite database.</p>
+<p>The main capabilities are:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User authentication</td>
+<td>Users can register, log in, and access protected document and QA
+endpoints through bearer tokens.</td>
+</tr>
+<tr>
+<td>File upload</td>
+<td>Users can upload TXT, PDF, PNG, JPG, and JPEG files. Unsupported
+formats are rejected.</td>
+</tr>
+<tr>
+<td>Document management</td>
+<td>Users can view document names, types, sizes, processing status,
+errors, and update times.</td>
+</tr>
+<tr>
+<td>Text extraction</td>
+<td>TXT files are decoded directly, PDFs are parsed with PyMuPDF, and
+images are OCR-processed with Tesseract where installed.</td>
+</tr>
+<tr>
+<td>Text cleaning and chunking</td>
+<td>Extracted text is normalised and split into smaller chunks with
+document and page metadata.</td>
+</tr>
+<tr>
+<td>Retrieval</td>
+<td>The system retrieves relevant chunks using optional semantic
+retrieval and a local lexical fallback.</td>
+</tr>
+<tr>
+<td>Question answering</td>
+<td>The backend constructs a prompt using retrieved chunks and calls
+DeepSeek when configured.</td>
+</tr>
+<tr>
+<td>Citation display</td>
+<td>Answers include citations containing document name, page number,
+chunk identifier, preview text, and score.</td>
+</tr>
+<tr>
+<td>Graceful fallback</td>
+<td>If the LLM key is missing or the external call fails, the system
+returns a local evidence-based answer rather than failing silently.</td>
+</tr>
+</tbody>
+</table>
+<p>The operating context is a local machine used for coursework
+demonstration. The system is intentionally designed to work without
+complex deployment infrastructure. It does not require cloud storage,
+container orchestration, or third-party identity providers.</p>
+<h2 id="scope">1.5 Scope</h2>
+<p>The proof-of-concept implements the core workflow described in the
+project proposal:</p>
+<ol type="1">
+<li>A user registers and logs in.</li>
+<li>The user uploads a document.</li>
+<li>The backend stores the file locally.</li>
+<li>The backend extracts or recognises text.</li>
+<li>The text is cleaned and split into chunks.</li>
+<li>Chunks and metadata are stored locally.</li>
+<li>The user asks a question.</li>
+<li>Relevant chunks are retrieved.</li>
+<li>The backend generates an answer using DeepSeek if configured, or an
+extractive fallback otherwise.</li>
+<li>The frontend displays the answer and citations.</li>
+</ol>
+<p>The project explicitly excludes full enterprise authorisation,
+collaborative editing, mobile application development, large-scale
+distributed storage, self-training of large language models, and
+large-scale multi-tenant SaaS deployment. These exclusions keep the
+project feasible within the course timeframe and allow attention to be
+focused on system design, implementation quality, and the demonstrable
+pipeline.</p>
+<h1 id="system-design">2. System Design</h1>
+<h2 id="design-goals">2.1 Design Goals</h2>
+<p>The system design is guided by six goals.</p>
+<p>The first goal is local-first operation. Original documents should
+remain on the user’s machine. The database, uploaded files, and
+retrieval data should be stored in local project directories. External
+services should only receive selected text fragments after retrieval,
+and only if the user has configured a model API key.</p>
+<p>The second goal is modularity. Document processing, storage,
+retrieval, authentication, LLM generation, and frontend presentation
+should be separated. This reduces coupling and allows parts of the
+system to be replaced. For example, the OCR backend, embedding model, or
+LLM provider can be changed without rewriting the document management
+UI.</p>
+<p>The third goal is traceability. A generated answer is only useful if
+users can verify where it came from. The system therefore preserves
+document name, page number, chunk identifier, preview text, and
+retrieval score. These citations are returned by the API and displayed
+in the frontend.</p>
+<p>The fourth goal is graceful degradation. In a student project
+environment, external services, OCR engines, and heavy machine learning
+dependencies may not always be available. The system should still
+demonstrate the core workflow when optional components are missing. This
+is why the retrieval layer includes a local lexical fallback and the
+answer layer includes a local extractive fallback.</p>
+<p>The fifth goal is simplicity of deployment. The proof-of-concept
+should be easy to run on a development machine. It uses a local FastAPI
+process, a Vite frontend server, SQLite, and file-system directories.
+This avoids the need for Docker, managed databases, or remote
+infrastructure during demonstration.</p>
+<p>The sixth goal is extensibility. Although the proof-of-concept is
+intentionally limited, the architecture should make realistic extensions
+possible, including background processing, encrypted storage, better
+semantic retrieval, richer document previews, or additional file
+formats.</p>
+<h2 id="high-level-architecture">2.2 High-Level Architecture</h2>
+<p>The system uses a layered architecture. Each layer has a clear
+responsibility and communicates through explicit interfaces.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Main responsibility</th>
+<th>Main technologies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend layer</td>
+<td>Login, upload, document management, chat, citations</td>
+<td>React, TypeScript, Vite</td>
+</tr>
+<tr>
+<td>API layer</td>
+<td>HTTP endpoints, authentication, request validation, response
+formatting</td>
+<td>FastAPI, Pydantic</td>
+</tr>
+<tr>
+<td>Persistence layer</td>
+<td>User, document, and chunk metadata</td>
+<td>SQLite, SQLModel</td>
+</tr>
+<tr>
+<td>File storage layer</td>
+<td>Original uploaded files and retrieval manifests</td>
+<td>Local file system</td>
+</tr>
+<tr>
+<td>Processing layer</td>
+<td>Text extraction, OCR, cleaning, and chunking</td>
+<td>PyMuPDF, pytesseract, Tesseract</td>
+</tr>
+<tr>
+<td>Retrieval layer</td>
+<td>Chunk search and ranking</td>
+<td>SentenceTransformers, FAISS, lexical fallback</td>
+</tr>
+<tr>
+<td>Generation layer</td>
+<td>Prompt construction and answer generation</td>
+<td>DeepSeek API, fallback answer logic</td>
+</tr>
+</tbody>
+</table>
+<p>The main architectural flow is:</p>
+<ol type="1">
+<li>The browser sends authenticated requests to the FastAPI
+backend.</li>
+<li>The backend validates the request and authorises the user.</li>
+<li>Uploaded files are stored in <code>data/uploads</code>.</li>
+<li>Metadata is recorded in SQLite.</li>
+<li>The processing service extracts and cleans text.</li>
+<li>The chunking service creates page-aware chunks.</li>
+<li>The retrieval service stores chunk metadata and retrieves relevant
+chunks during QA.</li>
+<li>The generation service sends only retrieved chunks to DeepSeek if
+configured.</li>
+<li>The backend returns an answer and citations.</li>
+<li>The frontend renders the answer and expandable citation
+previews.</li>
+</ol>
+<p>This architecture follows a separation-of-concerns principle. The
+frontend does not know how text extraction or retrieval work. The
+document router does not contain the low-level OCR logic. The LLM
+service does not directly manipulate the database. Each component has a
+focused responsibility.</p>
+<h2 id="backend-component-design">2.3 Backend Component Design</h2>
+<p>The backend is implemented as a FastAPI application under
+<code>apps/api/app</code>. It is organised into routers, services,
+database models, configuration, and security utilities.</p>
+<p>The router layer exposes the public API:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Router</th>
+<th>Endpoints</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication router</td>
+<td>Register, login, current user</td>
+<td>Account creation, password verification, token issuing</td>
+</tr>
+<tr>
+<td>Documents router</td>
+<td>Upload, list, get, delete, reprocess</td>
+<td>File management and processing orchestration</td>
+</tr>
+<tr>
+<td>QA router</td>
+<td>Query endpoint</td>
+<td>Question validation and answer response</td>
+</tr>
+<tr>
+<td>Health endpoint</td>
+<td>Health/configuration status</td>
+<td>Basic operational check</td>
+</tr>
+</tbody>
+</table>
+<p>The service layer implements reusable business logic:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage service</td>
+<td>File type validation, filename sanitisation, upload saving, file
+deletion</td>
+</tr>
+<tr>
+<td>Document processor</td>
+<td>TXT decoding, PDF parsing, image OCR, text cleaning</td>
+</tr>
+<tr>
+<td>Chunking service</td>
+<td>Chunk generation with document, page, and index metadata</td>
+</tr>
+<tr>
+<td>Vector service</td>
+<td>Chunk persistence, retrieval, semantic search attempt, lexical
+fallback</td>
+</tr>
+<tr>
+<td>LLM service</td>
+<td>DeepSeek request construction and response extraction</td>
+</tr>
+<tr>
+<td>RAG service</td>
+<td>Retrieval orchestration, citation formatting, fallback answer
+generation</td>
+</tr>
+</tbody>
+</table>
+<p>The database model includes three main entities:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User</td>
+<td>Stores user identity and hashed password</td>
+</tr>
+<tr>
+<td>Document</td>
+<td>Stores uploaded document metadata, owner, status, error message, and
+storage filename</td>
+</tr>
+<tr>
+<td>DocumentChunk</td>
+<td>Stores extracted chunks with owner, document, page, and text</td>
+</tr>
+</tbody>
+</table>
+<p>The design uses <code>owner_id</code> in document and chunk records
+to support personal knowledge bases. The current proof-of-concept has
+basic user isolation through authentication and ownership checks. This
+is not a full enterprise authorisation model, but it provides a
+foundation for private user workspaces.</p>
+<h2 id="frontend-component-design">2.4 Frontend Component Design</h2>
+<p>The frontend is implemented under <code>apps/web/src</code> using
+React and TypeScript. It is intentionally focused on operational
+workflows rather than a marketing-style landing page. The first screen
+is authentication, followed by document management and question
+answering.</p>
+<p>The main frontend modules are:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component or page</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>App</code></td>
+<td>Authentication state, top-level navigation, session persistence</td>
+</tr>
+<tr>
+<td><code>LoginPage</code></td>
+<td>Register/login form and authentication feedback</td>
+</tr>
+<tr>
+<td><code>DocumentsPage</code></td>
+<td>Document list, search, refresh, delete and reprocess actions</td>
+</tr>
+<tr>
+<td><code>UploadPanel</code></td>
+<td>File selection, client-side format validation, upload status</td>
+</tr>
+<tr>
+<td><code>DocumentTable</code></td>
+<td>Document metadata, status badges, row actions</td>
+</tr>
+<tr>
+<td><code>ChatPage</code></td>
+<td>Chat state and QA request handling</td>
+</tr>
+<tr>
+<td><code>ChatWindow</code></td>
+<td>Message display, question input, loading state</td>
+</tr>
+<tr>
+<td><code>CitationList</code></td>
+<td>Expandable citation previews</td>
+</tr>
+<tr>
+<td><code>api.ts</code></td>
+<td>Typed HTTP client for backend endpoints</td>
+</tr>
+</tbody>
+</table>
+<p>The frontend keeps interface state simple. It stores the
+authentication token in local storage, retrieves the current user on
+startup, and routes the user between the document and chat views. The
+document view emphasises processing status and error visibility, which
+is important because document processing can fail for legitimate reasons
+such as unsupported file formats or missing OCR binaries. The chat view
+emphasises answer traceability through citations.</p>
+<h2 id="data-flow-document-upload">2.5 Data Flow: Document Upload</h2>
+<p>The upload flow begins when the user selects a file in the browser.
+The frontend checks the extension against the supported formats and
+sends the file as multipart form data to the backend. The backend
+validates the filename again because client-side validation is not
+sufficient for security or correctness.</p>
+<p>The backend then sanitises the filename and stores the file in the
+local upload directory using a generated unique stored filename. This
+avoids collisions and reduces the risk of unsafe path usage. A document
+record is created in SQLite with status <code>uploaded</code>, then
+processing begins. The document status is set to
+<code>processing</code>, allowing the UI to communicate progress. After
+processing succeeds, the system writes chunks and sets the document
+status to <code>indexed</code>. If any error occurs, chunks for that
+document are deleted, the status becomes <code>failed</code>, and the
+error message is stored for display.</p>
+<p>This design makes failures visible and recoverable. A failed document
+can be reprocessed. A missing OCR engine, unreadable file, empty
+document, or parsing exception does not crash the application. It
+becomes a document-level failure that the user can inspect.</p>
+<h2 id="data-flow-question-answering">2.6 Data Flow: Question
+Answering</h2>
+<p>The question-answering flow begins when the user submits a natural
+language question in the chat interface. The frontend sends the question
+and <code>top_k</code> value to the backend. The backend verifies the
+user token and retrieves chunks owned by that user.</p>
+<p>The retrieval service first attempts semantic retrieval if the
+optional SentenceTransformers and FAISS dependencies are available. It
+encodes document chunks and the question, searches by vector similarity,
+and returns ranked hits. If the semantic dependencies are unavailable,
+it uses a lexical scoring fallback based on token overlap, phrase match,
+and term density. This fallback is less semantically powerful, but it
+keeps the demonstration operational without requiring heavy machine
+learning installation.</p>
+<p>The RAG service converts the retrieval hits into prompt context. Each
+hit is numbered and includes the source document name, page number, and
+text. The LLM service sends a system instruction and a user prompt to
+DeepSeek’s official chat completions endpoint. The prompt instructs the
+model to answer only from the supplied excerpts, to state when evidence
+is insufficient, and to cite sources using bracket numbers. If DeepSeek
+is unavailable, the RAG service constructs a local fallback answer from
+the top retrieved chunks and still returns citations.</p>
+<p>This flow supports answer traceability. The model does not receive
+the entire knowledge base, only the selected chunks. The frontend
+separately displays citation metadata, so the user can inspect the
+evidence even if the generated answer is incomplete.</p>
+<h2 id="interface-design">2.7 Interface Design</h2>
+<p>The API contract is deliberately small and stable. The main endpoints
+are:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method and path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /health</code></td>
+<td>Check backend status and DeepSeek configuration state</td>
+</tr>
+<tr>
+<td><code>POST /auth/register</code></td>
+<td>Register a user</td>
+</tr>
+<tr>
+<td><code>POST /auth/login</code></td>
+<td>Log in and receive bearer token</td>
+</tr>
+<tr>
+<td><code>GET /auth/me</code></td>
+<td>Retrieve current user</td>
+</tr>
+<tr>
+<td><code>POST /documents/upload</code></td>
+<td>Upload and process a document</td>
+</tr>
+<tr>
+<td><code>GET /documents</code></td>
+<td>List current user’s documents</td>
+</tr>
+<tr>
+<td><code>GET /documents/{document_id}</code></td>
+<td>Retrieve document metadata</td>
+</tr>
+<tr>
+<td><code>DELETE /documents/{document_id}</code></td>
+<td>Delete document and chunks</td>
+</tr>
+<tr>
+<td><code>POST /documents/{document_id}/reprocess</code></td>
+<td>Re-run processing</td>
+</tr>
+<tr>
+<td><code>POST /qa/query</code></td>
+<td>Ask a question and receive answer plus citations</td>
+</tr>
+</tbody>
+</table>
+<p>The QA response includes the answer and citation objects. Each
+citation contains the document identifier, document name, page, chunk
+identifier, preview text, and score. This is important because the
+frontend should not need to parse answer text to recover sources.
+Citations are first-class structured data.</p>
+<h2 id="privacy-and-security-design">2.8 Privacy and Security
+Design</h2>
+<p>The privacy design has three layers.</p>
+<p>First, original files remain local. Uploaded files are stored under
+the local data directory and are ignored by Git. Extracted chunks and
+SQLite metadata are also stored locally. This prevents accidental
+submission of user documents with the source code.</p>
+<p>Second, retrieval occurs locally. The system retrieves relevant
+chunks before any LLM call. This limits external transmission to
+selected passages rather than entire files. It also keeps the system
+usable when no external API key is configured.</p>
+<p>Third, authentication is used to separate user workspaces. Passwords
+are hashed with a PBKDF2-based scheme. Authentication uses bearer
+tokens. Document and chunk queries are scoped to the current user. This
+is appropriate for a proof-of-concept local application. It is not
+equivalent to enterprise security, but it demonstrates access-control
+awareness and prepares the architecture for stronger isolation.</p>
+<p>The security design also avoids storing secrets in tracked files. The
+DeepSeek API key belongs in <code>.env</code>, which is ignored by Git.
+The repository includes <code>.env.example</code> to show the required
+variable names without including sensitive values.</p>
+<h2 id="design-rationale">2.9 Design Rationale</h2>
+<p>Several design decisions were made to balance technical quality and
+project feasibility.</p>
+<p>FastAPI was selected because it provides clear request validation,
+automatic OpenAPI documentation, strong Python ecosystem compatibility,
+and efficient development speed. Python is also suitable for document
+processing, OCR integration, and machine learning libraries.</p>
+<p>SQLite was selected because the system is local-first and
+single-machine. A server database would add operational complexity
+without improving the proof-of-concept. SQLite is sufficient for storing
+users, documents, and chunks in a local demonstration environment.</p>
+<p>React with Vite was selected because it provides a fast frontend
+development experience and clear component separation. TypeScript adds
+stronger client-side type checking for API responses and UI state.</p>
+<p>DeepSeek’s official API was selected for answer generation because it
+provides an external chat completion model while keeping the system
+independent from cloud file storage. The backend uses a single dedicated
+DeepSeek integration rather than a generic provider abstraction at the
+current stage. This reduces configuration confusion and matches the
+latest project decision.</p>
+<p>The fallback retrieval and fallback answer paths were included
+because proof-of-concept systems must be demonstrable under imperfect
+conditions. The fallback path also supports evaluation of the local
+retrieval pipeline independently from the external LLM.</p>
+<h1 id="implementation">3. Implementation</h1>
+<h2 id="technology-stack">3.1 Technology Stack</h2>
+<p>The implemented technology stack is:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Area</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>React, TypeScript, Vite</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>FastAPI, Python</td>
+</tr>
+<tr>
+<td>API validation</td>
+<td>Pydantic models through FastAPI</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>SQLite through SQLModel</td>
+</tr>
+<tr>
+<td>File storage</td>
+<td>Local file system</td>
+</tr>
+<tr>
+<td>PDF processing</td>
+<td>PyMuPDF</td>
+</tr>
+<tr>
+<td>Image OCR</td>
+<td>Tesseract through pytesseract</td>
+</tr>
+<tr>
+<td>Retrieval</td>
+<td>SentenceTransformers and FAISS when available, lexical fallback
+otherwise</td>
+</tr>
+<tr>
+<td>LLM integration</td>
+<td>DeepSeek official chat completions API</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>pytest, FastAPI TestClient, TypeScript build</td>
+</tr>
+<tr>
+<td>Environment management</td>
+<td>uv for backend, npm for frontend</td>
+</tr>
+</tbody>
+</table>
+<p>This stack supports the goals of rapid implementation, local
+operation, and extensibility. It also keeps the project understandable
+for a software design and implementation assessment.</p>
+<h2 id="repository-structure">3.2 Repository Structure</h2>
+<p>The repository is organised as a small monorepo:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apps/api</code></td>
+<td>FastAPI backend</td>
+</tr>
+<tr>
+<td><code>apps/web</code></td>
+<td>React frontend</td>
+</tr>
+<tr>
+<td><code>data/uploads</code></td>
+<td>Local uploaded files, ignored by Git</td>
+</tr>
+<tr>
+<td><code>data/extracted</code></td>
+<td>Reserved for extracted text cache, ignored by Git</td>
+</tr>
+<tr>
+<td><code>data/indexes</code></td>
+<td>Retrieval manifests and future index files, ignored by Git</td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>Architecture, API contract, and report documents</td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>Utility scripts such as the DeepSeek console tester</td>
+</tr>
+<tr>
+<td><code>.env.example</code></td>
+<td>Template configuration</td>
+</tr>
+<tr>
+<td><code>.gitignore</code></td>
+<td>Prevents secrets, generated files, and local data from being
+committed</td>
+</tr>
+</tbody>
+</table>
+<p>The structure separates application code from runtime data. This is
+important because uploaded files and index data may contain private
+information and should not be included in source submissions unless
+explicitly required and cleaned.</p>
+<h2 id="backend-implementation">3.3 Backend Implementation</h2>
+<p>The backend application starts by loading configuration, creating
+required data directories, initialising database tables, and registering
+routers. The application exposes health information and protected
+endpoints.</p>
+<p>Authentication is implemented using a local user table, password
+hashing, and bearer tokens. This gives the project an access-control
+layer without requiring an external identity service. Registration
+stores a lowercased email and a password hash. Login verifies the
+password and issues a signed token. Protected endpoints depend on the
+current user, which allows document and chunk queries to be scoped by
+owner.</p>
+<p>The document router implements the upload and management lifecycle.
+Upload requests validate the file type and store the original file
+locally. The processing routine updates status values as the document
+progresses. The use of explicit statuses makes the UI clearer and also
+helps debugging. The status values are <code>uploaded</code>,
+<code>processing</code>, <code>indexed</code>, and
+<code>failed</code>.</p>
+<p>The document processor handles three file categories. Text files are
+decoded using a small sequence of likely encodings. PDFs are parsed
+using PyMuPDF page by page. Images are passed to pytesseract if the
+Tesseract executable is available on the system. Extracted text is
+cleaned by removing null characters, reducing repeated spaces,
+collapsing excessive blank lines, and discarding empty lines. This
+simple normalisation improves chunk quality without creating a complex
+natural language processing pipeline.</p>
+<p>The chunking service splits each page’s text into chunks with a
+configurable size and overlap. Chunking is page-aware, so the system can
+preserve page numbers for citations. The implementation also attempts to
+split near natural boundaries such as line breaks, sentence boundaries,
+or spaces rather than cutting text blindly whenever possible.</p>
+<p>The vector service stores chunks in SQLite and retrieves them during
+question answering. It attempts semantic retrieval if
+SentenceTransformers and FAISS are installed. If those packages are not
+available, the service uses lexical scoring. This is an
+implementation-specific design decision that increases robustness. A
+classroom demonstration should not fail simply because optional machine
+learning dependencies are heavy or slow to install.</p>
+<p>The LLM service is intentionally narrow. It calls DeepSeek’s official
+chat completions endpoint. The payload includes the selected model, a
+system message, the user question, retrieved local excerpts,
+temperature, and non-streaming mode. The service returns both the answer
+and an error message if the call fails. This allows the RAG layer to
+show a useful fallback message rather than hiding the cause.</p>
+<h2 id="frontend-implementation">3.4 Frontend Implementation</h2>
+<p>The frontend is a single-page React application. It is designed
+around two main authenticated views: document management and question
+answering. The UI is functional and restrained because the application
+is a work-focused tool rather than a public marketing website.</p>
+<p>The login page supports both account creation and login. Once a token
+is received, it is stored locally and used for API requests. On
+application startup, the frontend calls the current-user endpoint to
+check whether the saved token is still valid.</p>
+<p>The document page contains the upload panel and document list.
+Uploading triggers backend processing, and the returned document status
+is displayed immediately. The table shows filenames, file type, size,
+status, updated time, and error messages. Users can delete a document or
+reprocess it. A search box filters by filename, which is useful when a
+knowledge base contains many files.</p>
+<p>The chat page keeps a local message list. When the user asks a
+question, the frontend sends it to the QA endpoint and displays the
+returned answer. If citations are present, they are shown below the
+assistant response. Each citation can be expanded to show the text
+preview. This design makes it possible to verify the answer without
+opening the raw document.</p>
+<p>The API client is centralised in a single TypeScript file. This
+reduces duplication and keeps endpoint paths, request formats, and
+response types in one place. If the backend contract changes, the
+frontend changes can be made in a predictable location.</p>
+<h2 id="rag-prompt-and-answer-generation">3.5 RAG Prompt and Answer
+Generation</h2>
+<p>The generation prompt is deliberately conservative. The system prompt
+instructs the model to answer only using the supplied local knowledge
+base excerpts, to say what is missing if the excerpts are insufficient,
+and to cite sources using bracket numbers. The user prompt contains the
+user’s question followed by numbered excerpts. Each excerpt includes the
+document name, page, and chunk text.</p>
+<p>This prompt design supports the project’s traceability requirement.
+It does not guarantee perfect factual grounding because language models
+can still make mistakes, but it reduces the opportunity for unsupported
+answers. The separate structured citation list further supports
+verification.</p>
+<p>The current prompt does not include advanced features such as query
+rewriting, multi-step reasoning instructions, or answer format
+templates. This is an intentional proof-of-concept choice. It keeps the
+model interaction understandable and makes evaluation easier. Future
+work could add more sophisticated prompt templates for summarisation,
+comparison, or study revision modes.</p>
+<h2 id="error-handling">3.6 Error Handling</h2>
+<p>The implementation includes several error-handling mechanisms.</p>
+<p>Unsupported file formats are rejected with a clear message. Empty or
+unreadable documents become failed documents rather than crashing the
+backend. Missing Tesseract installation produces a clear OCR error.
+DeepSeek API failures produce a local fallback answer that includes the
+LLM error string. Authentication failures return appropriate error
+responses. The frontend displays errors in visible banners or document
+rows.</p>
+<p>This approach improves user experience and demonstrability. In an
+academic project, it is important not only that the happy path works,
+but also that common failure cases are handled predictably.</p>
+<h2 id="configuration">3.7 Configuration</h2>
+<p>The system uses environment variables for configuration. The most
+important variables are:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SECRET_KEY</code></td>
+<td>Token signing secret for local authentication</td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_API_KEY</code></td>
+<td>DeepSeek official API key</td>
+</tr>
+<tr>
+<td><code>DEEPSEEK_MODEL</code></td>
+<td>Model name, currently <code>deepseek-v4-pro</code></td>
+</tr>
+<tr>
+<td><code>EMBEDDING_MODEL</code></td>
+<td>Optional SentenceTransformers model</td>
+</tr>
+<tr>
+<td><code>CHUNK_SIZE</code></td>
+<td>Approximate chunk length</td>
+</tr>
+<tr>
+<td><code>CHUNK_OVERLAP</code></td>
+<td>Overlap between chunks</td>
+</tr>
+<tr>
+<td><code>CORS_ORIGINS</code></td>
+<td>Allowed frontend origins</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>.env.example</code> file documents these variables without
+exposing secrets. The <code>.env</code> file is ignored by Git. This is
+a necessary professional practice because API keys should not be
+committed to repositories.</p>
+<h2 id="application-of-design-principles">3.8 Application of Design
+Principles</h2>
+<p>The project applies several design principles.</p>
+<p>Separation of concerns is visible in the split between routers,
+services, models, and frontend components. The storage service is not
+responsible for LLM calls. The LLM service is not responsible for
+database queries. The frontend API client is separate from UI
+components.</p>
+<p>Single responsibility is applied at the module level. Each service
+has a clear purpose. This makes the code easier to test and modify. For
+example, the document processor can be improved without changing the
+authentication router.</p>
+<p>Graceful degradation is built into retrieval and generation. Semantic
+retrieval and DeepSeek generation improve quality when available, but
+local fallback paths preserve basic functionality when external or
+optional dependencies are unavailable.</p>
+<p>Explicit interfaces are used through API contracts and typed frontend
+models. The QA endpoint returns structured citations rather than
+requiring the frontend to parse citations from natural language.</p>
+<p>Local-first privacy is applied through data placement and processing
+flow. Files are stored locally, and retrieval happens before any
+external request. Only selected chunks are sent to DeepSeek.</p>
+<h2 id="significant-technical-challenges">3.9 Significant Technical
+Challenges</h2>
+<p>One challenge was balancing semantic retrieval quality with
+installation complexity. SentenceTransformers and FAISS are suitable for
+semantic retrieval, but they add large dependencies and can be difficult
+to install in restricted environments. The implemented solution makes
+these dependencies optional and provides a lexical fallback. This
+preserves extensibility while keeping the proof-of-concept
+demonstrable.</p>
+<p>A second challenge was handling OCR realistically. Image OCR depends
+not only on Python libraries but also on the Tesseract executable being
+installed on the system path. The system cannot fully control that
+external installation. The implementation therefore detects missing
+Tesseract and reports a clear failure. This is preferable to silently
+producing empty text or crashing.</p>
+<p>A third challenge was managing LLM provider configuration. During
+development, an intermediate API gateway was considered, but the final
+implementation uses DeepSeek’s official API directly. This reduced
+configuration complexity and removed ambiguous base URL settings. The
+final design has a dedicated DeepSeek key and model variable.</p>
+<p>A fourth challenge was maintaining citation metadata through the
+pipeline. Page numbers and document names must survive extraction,
+chunking, storage, retrieval, answer generation, and frontend rendering.
+The design addresses this by treating citation metadata as structured
+data stored with chunks and returned separately from the generated
+answer.</p>
+<p>A fifth challenge was ensuring the system remains useful when the
+external LLM fails. A system that fails entirely when the model API is
+unavailable would be fragile. The fallback answer path provides a
+lower-quality but still informative response based on retrieved
+chunks.</p>
+<h2 id="data-model-and-persistence-details">3.10 Data Model and
+Persistence Details</h2>
+<p>The data model was kept intentionally small because the
+proof-of-concept focuses on a single-user or small local-user
+environment rather than enterprise-scale knowledge management. However,
+the model still captures the relationships needed for ownership,
+document management, retrieval, and citation.</p>
+<p>The <code>User</code> model stores identity information and
+authentication material. It includes a generated identifier, email
+address, hashed password, and creation timestamp. The email address is
+indexed and unique. This supports login and prevents accidental
+duplicate accounts. Passwords are not stored directly. They are
+transformed into salted hashes before persistence.</p>
+<p>The <code>Document</code> model stores metadata about each uploaded
+file. It includes the owner identifier, original filename, stored
+filename, content type, file type, size, processing status, error
+message, and timestamps. The distinction between original filename and
+stored filename is important. The original filename is shown to the
+user, while the stored filename is generated to avoid collisions and
+unsafe path behaviour. The status field is indexed because document
+lists and processing views commonly need to filter or sort by state.</p>
+<p>The <code>DocumentChunk</code> model stores searchable text units.
+Each chunk belongs to a user and a document. It stores the document name
+for citation convenience, the chunk index, page number where available,
+and the chunk text. Storing document name in the chunk is a small
+denormalisation. It avoids extra joins during retrieval response
+construction and keeps citation generation simple. In a larger system
+this might be replaced by a more normalised query or a materialised
+view, but for the proof-of-concept it is a reasonable trade-off.</p>
+<p>The choice of SQLite affects the persistence design. SQLite works
+well for local applications because it is file-based, reliable, and
+requires no separate server process. It also simplifies setup for
+assessors. The limitation is that SQLite is not intended for
+high-concurrency multi-user cloud workloads. This is acceptable because
+the project scope explicitly excludes large-scale SaaS deployment.</p>
+<p>Runtime files are intentionally separated from tracked source files.
+Uploaded documents, extracted text, indexes, SQLite databases, caches,
+and local virtual environments are ignored by Git. This design reduces
+the risk of accidentally submitting private documents, API keys,
+generated database state, or environment-specific artifacts.</p>
+<h2 id="api-and-contract-stability">3.11 API and Contract Stability</h2>
+<p>The API contract is designed to support independent frontend and
+backend work. The frontend depends on stable endpoint paths and response
+shapes, while the backend can change internal services without changing
+the browser code. This separation was particularly important because the
+project could be split into multiple parallel development threads.</p>
+<p>The authentication endpoints follow a simple pattern: register,
+login, and current user. The login endpoint returns a bearer token, and
+the frontend attaches it to protected requests. The document endpoints
+expose standard document management actions. The QA endpoint accepts a
+question and a <code>top_k</code> value and returns an answer plus
+citations.</p>
+<p>The decision to return citations as structured data is significant.
+An alternative design would be to ask the language model to write
+citations only in the natural language answer. That approach is fragile
+because the frontend would need to parse the answer, and the model might
+omit or misformat references. The implemented design separates generated
+answer text from machine-readable evidence metadata. This is more robust
+and easier to evaluate.</p>
+<p>The health endpoint also serves as an operational check. It reports
+whether DeepSeek is configured and which DeepSeek model is selected.
+This helps diagnose configuration issues without exposing the API key.
+This feature became useful during development because LLM configuration
+failures can otherwise look similar to retrieval failures.</p>
+<h2 id="testing-strategy">3.12 Testing Strategy</h2>
+<p>The testing strategy focuses on the highest-risk proof-of-concept
+behaviours. It does not attempt exhaustive coverage of every UI state,
+but it does check the core backend workflow and the frontend build.</p>
+<p>Backend tests use FastAPI’s test client. This allows endpoint
+behaviour to be tested without running a separate server process. The
+authentication test verifies that a user can register, log in, receive a
+token, and call the current-user endpoint. The document and QA test
+verifies that a text file can be uploaded, indexed, and queried. The
+processing and chunking test verifies that a text document can be
+processed and converted into chunks with metadata.</p>
+<p>Frontend verification is performed through a production build. This
+checks TypeScript compilation, module resolution, bundling, and major
+syntax errors. It is not a substitute for browser-based user testing,
+but it provides strong evidence that the frontend code is internally
+consistent.</p>
+<p>Static checking is performed through Ruff for backend Python code.
+This catches unused imports and common style or correctness issues.
+During development, this check found minor unused imports after service
+changes. Removing these issues improved code clarity.</p>
+<p>The testing approach reflects the proof-of-concept stage. The goal is
+to verify that the main workflow is stable enough for demonstration.
+Future testing should add more file formats, OCR-specific tests, API
+error cases, retrieval ranking tests, and frontend interaction
+tests.</p>
+<h2 id="deployment-and-operation">3.13 Deployment and Operation</h2>
+<p>The system is operated as two local processes. The backend is started
+from the API directory using <code>uv</code> and Uvicorn. The frontend
+is started from the web directory using npm and Vite. The browser
+connects to the frontend, and the frontend connects to the backend.</p>
+<p>This local operation model was selected because it matches the
+privacy and simplicity goals. It avoids hosting documents on external
+infrastructure and avoids requiring assessors to configure a remote
+server. It also makes the system easier to inspect during demonstration.
+The API documentation is available through FastAPI’s generated
+documentation interface, which helps show the available endpoints.</p>
+<p>The main operational prerequisites are a working Python environment
+managed by <code>uv</code>, a Node.js environment for the frontend, and
+optionally Tesseract for image OCR. If generated LLM answers are
+required, the user must add a DeepSeek API key to <code>.env</code>. If
+the key is missing, the system still demonstrates local retrieval and
+citation output.</p>
+<p>The operation model has limitations. Running two terminal processes
+is acceptable for a technical demonstration, but non-technical users
+would prefer a single launcher. Future packaging could provide a desktop
+wrapper or a script that starts both processes, checks ports, verifies
+Tesseract, and opens the browser automatically.</p>
+<h1 id="development-process">4. Development Process</h1>
+<h2 id="methodology">4.1 Methodology</h2>
+<p>The project followed an agile, iterative development approach
+inspired by Scrum. The original proposal divided the work into
+front-end, back-end, algorithm/RAG, integration, and documentation
+responsibilities. The implementation process reflected this by building
+the system in functional slices rather than attempting to complete each
+layer in isolation.</p>
+<p>The development approach prioritised a working end-to-end flow early.
+A proof-of-concept is most valuable when the core workflow can be
+demonstrated. Therefore, the first implementation target was not a
+complete user interface or perfect retrieval model, but the smallest
+meaningful pipeline: register, upload, extract, chunk, ask, retrieve,
+answer, and cite. Once that path existed, the design could be refined
+and error handling improved.</p>
+<h2 id="iteration-strategy">4.2 Iteration Strategy</h2>
+<p>The development process can be described as six iterations.</p>
+<p>The first iteration established the repository structure and
+architecture. The monorepo layout was created with separate frontend,
+backend, data, and documentation directories. The API contract and
+architecture documents were added to keep the implementation aligned
+with the proposal.</p>
+<p>The second iteration implemented backend foundations. This included
+FastAPI application setup, configuration loading, SQLite models,
+database sessions, authentication, password hashing, bearer tokens, and
+basic routers. This created the foundation for protected workflows.</p>
+<p>The third iteration implemented document ingestion. File upload,
+format validation, local storage, metadata creation, status transitions,
+and document listing were added. TXT and PDF text extraction were
+implemented, and OCR support was prepared through pytesseract and
+Tesseract detection.</p>
+<p>The fourth iteration implemented retrieval and QA. Text cleaning,
+chunking, chunk persistence, retrieval, DeepSeek integration, prompt
+construction, citation formatting, and fallback answering were
+implemented. This completed the core RAG pipeline.</p>
+<p>The fifth iteration implemented the frontend. The login page,
+document management page, upload panel, document table, chat page, chat
+window, and citation display were added. The UI was connected to the
+backend through a typed API client.</p>
+<p>The sixth iteration focused on integration, testing, documentation,
+and configuration cleanup. Tests were added for authentication, document
+upload, QA fallback, text processing, and chunking. Frontend builds and
+backend linting were run. The LLM configuration was simplified to
+DeepSeek official API variables only. Documentation was updated to match
+the implementation.</p>
+<h2 id="milestone-progression">4.3 Milestone Progression</h2>
+<p>The project progressed from proposal to implementation as
+follows:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Requirements and proposal</td>
+<td>Defined target users, local-first RAG scope, technologies, and
+exclusions</td>
+</tr>
+<tr>
+<td>Architecture design</td>
+<td>Established layered architecture and local data model</td>
+</tr>
+<tr>
+<td>Backend foundation</td>
+<td>Implemented authentication, configuration, database, and router
+structure</td>
+</tr>
+<tr>
+<td>Document processing</td>
+<td>Added file upload, PDF parsing, text extraction, OCR path, and
+status handling</td>
+</tr>
+<tr>
+<td>Retrieval and RAG</td>
+<td>Added chunking, retrieval, DeepSeek generation, and fallback
+answers</td>
+</tr>
+<tr>
+<td>Frontend workflow</td>
+<td>Added login, upload, document list, chat, and citation UI</td>
+</tr>
+<tr>
+<td>Verification</td>
+<td>Added automated tests and build checks</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>Created API contract, architecture notes, README, utility script,
+and final report</td>
+</tr>
+</tbody>
+</table>
+<p>The milestones show a progression from design to operational
+proof-of-concept. Each milestone produced a usable improvement rather
+than only internal code changes.</p>
+<h2 id="adaptations-during-development">4.4 Adaptations During
+Development</h2>
+<p>Several adaptations were made during development.</p>
+<p>The original proposal allowed either OpenAI-compatible external LLM
+services or other comparable providers. During implementation, the
+project first supported a configurable OpenAI-compatible base URL.
+However, this created configuration confusion when an intermediate
+gateway was used. The design was then simplified to DeepSeek official
+API only. This reduced the risk of incorrect base URLs and made the
+configuration clearer for demonstration.</p>
+<p>The retrieval design was also adapted. The proposal named
+SentenceTransformers and FAISS as proposed technologies. The
+implementation keeps these as the preferred semantic retrieval path but
+provides a lexical fallback. This adaptation was necessary because
+optional machine learning dependencies can create installation issues in
+restricted local environments. The fallback does not replace semantic
+retrieval as the ideal path, but it protects the proof-of-concept
+workflow.</p>
+<p>Testing was adapted to the local environment. Temporary directories
+and cache locations were configured inside the project to avoid
+permission problems. This made automated checks more reliable in the
+development environment.</p>
+<p>The frontend design also adapted to the proof-of-concept focus.
+Instead of building a broad dashboard or landing page, the interface
+focuses on the workflows that matter for evaluation: uploading, seeing
+processing status, asking questions, and verifying citations.</p>
+<h2 id="teamwork-and-role-reflection">4.5 Teamwork and Role
+Reflection</h2>
+<p>The proposed team structure divided responsibilities into frontend,
+backend, algorithm/RAG, project leadership, and documentation. The
+implemented repository reflects these boundaries. Frontend work is
+isolated in <code>apps/web</code>; backend API and service work is in
+<code>apps/api</code>; documentation is in <code>docs</code>; utility
+scripts are in <code>tools</code>.</p>
+<p>This structure supports parallel development. A frontend developer
+can work on the chat interface while a backend developer works on QA
+endpoint behaviour, as long as the API contract remains stable. A
+processing-focused developer can improve OCR or chunking without
+modifying the login UI. A documentation-focused member can update
+architecture and user manual materials without touching runtime
+code.</p>
+<p>The development process also highlights the importance of integration
+ownership. Even when tasks are divided, the value of the system depends
+on the complete workflow. Upload, processing, retrieval, generation, and
+citation display must work together. Integration testing and shared API
+contracts are therefore essential for this kind of project.</p>
+<h2 id="use-of-ai-assisted-tools">4.6 Use of AI-Assisted Tools</h2>
+<p>AI-assisted tools were used as supplementary aids during development
+and documentation preparation. They supported drafting, code generation,
+debugging suggestions, and report structuring. The team remains
+responsible for understanding, editing, testing, and validating all
+submitted work. AI assistance did not replace project analysis, design
+responsibility, implementation decisions, or evaluation. This
+acknowledgement is included to align with the assessment guidance on
+responsible use of AI-assisted tools.</p>
+<h1 id="evaluation-of-outcomes">5. Evaluation of Outcomes</h1>
+<h2 id="evaluation-approach">5.1 Evaluation Approach</h2>
+<p>The system was evaluated against the original objectives and the
+course assessment expectations. The evaluation considers functional
+completeness, architectural alignment, implementation quality,
+usability, privacy, stability, and limitations. Evidence includes
+implemented features, repository structure, automated tests, build
+results, and observed behaviour during local testing.</p>
+<p>The evaluation is not a large-scale user study. That would require
+more participants, prepared task sets, quantitative timing data, and
+controlled comparison with alternative tools. For a proof-of-concept
+project, the evaluation focuses on whether the system convincingly
+demonstrates the proposed design and whether the implementation is
+technically credible and extendable.</p>
+<h2 id="requirement-satisfaction">5.2 Requirement Satisfaction</h2>
+<p>The implemented system satisfies the central requirements from the
+proposal.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Upload PDFs, images, and text files</td>
+<td>Implemented for TXT, PDF, PNG, JPG, and JPEG</td>
+</tr>
+<tr>
+<td>Local storage</td>
+<td>Implemented through local data directories and SQLite</td>
+</tr>
+<tr>
+<td>Document parsing</td>
+<td>Implemented for TXT and PDF; image OCR supported when Tesseract is
+installed</td>
+</tr>
+<tr>
+<td>Text cleaning</td>
+<td>Implemented with whitespace, null-character, and line
+normalisation</td>
+</tr>
+<tr>
+<td>Chunking</td>
+<td>Implemented with configurable chunk size and overlap</td>
+</tr>
+<tr>
+<td>Vector retrieval</td>
+<td>Designed with optional SentenceTransformers and FAISS, with lexical
+fallback</td>
+</tr>
+<tr>
+<td>Natural language QA</td>
+<td>Implemented through QA endpoint and chat UI</td>
+</tr>
+<tr>
+<td>Source traceability</td>
+<td>Implemented through structured citations</td>
+</tr>
+<tr>
+<td>Basic web interface</td>
+<td>Implemented with login, document management, and chat views</td>
+</tr>
+<tr>
+<td>Error handling</td>
+<td>Implemented for common upload, processing, OCR, and LLM
+failures</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Implemented with registration, login, bearer token, and ownership
+checks</td>
+</tr>
+<tr>
+<td>Local-first privacy</td>
+<td>Implemented for files, metadata, retrieval, and optional external
+generation</td>
+</tr>
+</tbody>
+</table>
+<p>The strongest outcome is the complete end-to-end flow. The user can
+upload a document, have it processed, ask a question, and receive an
+answer with citations. This directly demonstrates the viability of the
+project concept.</p>
+<h2 id="automated-verification">5.3 Automated Verification</h2>
+<p>The project includes automated backend tests and frontend build
+checks. The backend tests currently cover:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Test area</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication</td>
+<td>Register, login, token use, and current-user endpoint</td>
+</tr>
+<tr>
+<td>Text processing</td>
+<td>TXT processing and cleaned text output</td>
+</tr>
+<tr>
+<td>Chunking</td>
+<td>Chunk creation with document and page metadata</td>
+</tr>
+<tr>
+<td>Document upload</td>
+<td>Uploading a text file and receiving indexed status</td>
+</tr>
+<tr>
+<td>QA fallback</td>
+<td>Asking a question and receiving answer plus citations</td>
+</tr>
+</tbody>
+</table>
+<p>The latest verification results were:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend pytest suite</td>
+<td>3 tests passed</td>
+</tr>
+<tr>
+<td>Backend static check</td>
+<td>Passed</td>
+</tr>
+<tr>
+<td>Frontend TypeScript and production build</td>
+<td>Passed</td>
+</tr>
+</tbody>
+</table>
+<p>These tests do not prove full correctness, but they provide evidence
+that the main workflow and build process are stable.</p>
+<h2 id="functional-strengths">5.4 Functional Strengths</h2>
+<p>The first functional strength is completeness of the proof-of-concept
+workflow. The system is not only a set of independent modules; the
+modules are connected into a working user-facing application.</p>
+<p>The second strength is citation support. Many simple AI demos return
+only a generated answer. This system returns structured evidence,
+allowing users to see document names, pages, text previews, and
+scores.</p>
+<p>The third strength is local-first design. The implementation does not
+require cloud storage or remote indexing. It stores original documents
+and chunks locally, which matches the privacy goal.</p>
+<p>The fourth strength is graceful fallback. Missing LLM credentials or
+external failures do not make the QA endpoint unusable. The system still
+returns relevant local passages. This is valuable for demonstration and
+for debugging retrieval independently from generation.</p>
+<p>The fifth strength is a clear user interface. The document status
+badges and error messages help users understand whether a file has been
+processed successfully. The chat interface is focused and avoids
+unnecessary complexity.</p>
+<h2 id="technical-strengths">5.5 Technical Strengths</h2>
+<p>Architecturally, the system is modular. The separation between
+routers and services makes the backend easier to understand and extend.
+The frontend components are similarly focused.</p>
+<p>The configuration design is practical. Secrets are kept out of
+tracked files. DeepSeek configuration is reduced to two variables,
+avoiding confusion caused by arbitrary base URLs. Runtime data is
+ignored by Git.</p>
+<p>The use of SQLite is appropriate for the operating context. It avoids
+external database setup while still giving structured persistence.</p>
+<p>The use of FastAPI supports automatic API documentation and request
+validation. This improves developer experience and helps demonstrate the
+API contract.</p>
+<p>The retrieval design is realistic. It recognises that semantic
+retrieval is desirable, but it also recognises that optional ML
+dependencies can be difficult in some environments. The fallback keeps
+the proof-of-concept robust.</p>
+<h2 id="limitations">5.6 Limitations</h2>
+<p>The first limitation is OCR dependency management. Image OCR requires
+Tesseract to be installed separately and available on the system path.
+If Tesseract is missing, image processing fails with a clear error. This
+is acceptable for a proof-of-concept but should be improved in a
+packaged product through installation checks or bundled setup
+guidance.</p>
+<p>The second limitation is retrieval quality. The lexical fallback is
+useful but cannot fully match semantic retrieval. It may retrieve chunks
+with overlapping words rather than the truly most relevant meaning.
+Installing the ML extra improves this, but a full evaluation would
+require benchmark questions and relevance judgements.</p>
+<p>The third limitation is synchronous processing. Upload processing
+currently occurs during the request. This is simple, but large PDFs or
+slow OCR could make the user wait. A production-ready design should use
+background jobs and progress updates.</p>
+<p>The fourth limitation is document viewing. The frontend displays
+citation previews but does not yet provide an integrated PDF or image
+viewer that jumps directly to the cited page. This limits source
+verification convenience.</p>
+<p>The fifth limitation is security depth. The system has basic
+authentication and local user separation, but it does not implement
+encrypted local storage, role-based access control, refresh tokens,
+audit logs, or hardened production deployment settings.</p>
+<p>The sixth limitation is evaluation scope. Automated tests validate
+basic behaviour, but broader user testing and retrieval quality
+measurement have not yet been performed.</p>
+<h2 id="outcome-against-course-objectives">5.7 Outcome Against Course
+Objectives</h2>
+<p>The project demonstrates software-centric system creation through a
+working full-stack application. It applies current software design
+practices such as layered architecture, API contracts, component-based
+frontend design, local-first data handling, and retrieval-augmented
+generation. It also demonstrates project management and teamwork
+principles through the structured repository, milestones, and separation
+of responsibilities.</p>
+<p>The proof-of-concept is technically credible. It implements the
+central features from the proposal and leaves realistic paths for
+extension. The final design is aligned with the course objective of
+building a software-centric system rather than merely describing
+one.</p>
+<h2 id="reflection-on-project-process">5.8 Reflection on Project
+Process</h2>
+<p>The main lesson from the project process is that integration risk
+should be addressed early. In a RAG system, document parsing, retrieval,
+prompt construction, LLM calls, and frontend display all depend on each
+other. Waiting too long to integrate these parts would make late-stage
+debugging difficult. Building a minimal end-to-end path early made later
+changes safer.</p>
+<p>A second lesson is that local-first systems still have external
+dependency risks. Even if documents are local, OCR engines, model APIs,
+and machine learning packages can introduce setup complexity. The
+project addressed this through fallback paths and clear error
+messages.</p>
+<p>A third lesson is that configuration simplicity matters. The
+intermediate API gateway configuration introduced uncertainty around
+base URLs and model names. Moving to DeepSeek official API variables
+made the system easier to explain and operate.</p>
+<p>A fourth lesson is that citations need to be designed from the
+beginning. If page and document metadata are not preserved through
+chunking and retrieval, source attribution becomes difficult later. The
+implemented data model preserved this metadata early.</p>
+<h2 id="evaluation-of-non-functional-qualities">5.9 Evaluation of
+Non-Functional Qualities</h2>
+<p>In addition to functional requirements, the system can be evaluated
+against several non-functional qualities: usability, maintainability,
+privacy, reliability, performance, portability, and extensibility.</p>
+<p>Usability is supported by a small set of focused screens. The user
+does not need to understand the internal processing pipeline. The
+document page shows status values and error messages, while the chat
+page presents answers and citations. However, usability remains limited
+by the lack of integrated document preview and the need to run backend
+and frontend processes manually.</p>
+<p>Maintainability is supported by modular structure. Backend routers
+and services are separated. Frontend components are organised by page
+and function. The API client centralises frontend HTTP calls. This
+structure reduces the cost of changes. For example, changing the
+DeepSeek integration affects the LLM service and configuration, not the
+upload component.</p>
+<p>Privacy is supported by local storage and local retrieval. Original
+documents are not uploaded to cloud storage. Only selected chunks are
+sent to DeepSeek when a key is configured. The limitation is that
+retrieved chunks may still contain sensitive content, so users must
+understand that asking questions with DeepSeek enabled can transmit
+excerpts externally.</p>
+<p>Reliability is supported by fallback paths and explicit error states.
+OCR failure, missing API keys, unsupported formats, and LLM errors do
+not crash the whole system. The limitation is that long-running document
+processing is synchronous, so very large documents may still affect
+responsiveness.</p>
+<p>Performance is adequate for small proof-of-concept datasets. SQLite
+and local files are efficient for local use. Retrieval over a modest
+number of chunks is fast enough for demonstration. Performance may
+degrade with very large collections if the fallback retrieval scans many
+chunks or if embeddings are recomputed frequently. A production system
+would need persistent vector indexes, background indexing, and possibly
+incremental updates.</p>
+<p>Portability is partly achieved. The system uses common cross-platform
+technologies: Python, Node.js, SQLite, and web browsers. However, OCR
+portability depends on Tesseract installation, and optional ML
+dependencies can vary across systems. The use of <code>uv</code> and npm
+improves reproducibility but does not eliminate all system-level
+dependencies.</p>
+<p>Extensibility is one of the strongest qualities. The layered
+architecture allows new file processors, retrieval methods, LLM prompts,
+and UI views to be added. The current implementation is intentionally
+not over-engineered, but it provides clear extension points.</p>
+<h2 id="risk-analysis">5.10 Risk Analysis</h2>
+<p>The project contains technical, usability, privacy, and
+project-management risks.</p>
+<p>One technical risk is dependency availability. OCR and semantic
+retrieval rely on external components. The mitigation is clear error
+reporting and optional fallback behaviour. The remaining risk is that
+users may expect image OCR to work without installing Tesseract. Future
+installation checks would reduce this risk.</p>
+<p>A second technical risk is retrieval accuracy. If retrieval returns
+irrelevant chunks, the LLM will answer from poor evidence or the
+fallback answer will be unhelpful. The mitigation is citation display,
+which lets users inspect the evidence. Future work should add retrieval
+evaluation and hybrid ranking.</p>
+<p>A third risk is LLM hallucination. Even when instructed to use only
+excerpts, an LLM may infer or phrase information inaccurately. The
+mitigation is a conservative prompt, low temperature, and source
+citations. The remaining risk cannot be fully removed without more
+robust answer verification.</p>
+<p>A fourth risk is privacy misunderstanding. Users may assume that
+local-first means no data ever leaves the machine. In this system,
+retrieved snippets are sent to DeepSeek when
+<code>DEEPSEEK_API_KEY</code> is configured. Documentation must state
+this clearly. The implementation reduces exposure by sending only
+selected chunks rather than whole documents.</p>
+<p>A fifth risk is scope expansion. Many features are attractive,
+including knowledge graphs, collaborative editing, full document
+viewers, mobile apps, and large-scale cloud deployment. The proposal
+explicitly excludes these areas. The development process maintained
+focus on the minimum demonstrable workflow.</p>
+<p>A sixth risk is inconsistent local environments. Different machines
+may have different Python, Node, network, or OCR configurations. The
+project mitigates this through README instructions, environment
+variables, tests, and fallback paths. A packaged installer would further
+reduce this risk.</p>
+<h2 id="ethical-and-professional-considerations">5.11 Ethical and
+Professional Considerations</h2>
+<p>The system interacts with personal documents and external AI
+services, so ethical and professional considerations are important. The
+local-first design is a response to these concerns. It avoids
+unnecessary centralisation of private files and gives users control over
+whether to configure an external LLM.</p>
+<p>The system should be transparent about data flow. Users should know
+that original files remain local, retrieval runs locally, and only
+retrieved text snippets are sent to DeepSeek when generated answers are
+enabled. This transparency is important for informed consent.</p>
+<p>The system should also avoid overstating answer reliability.
+Generated answers are useful but not authoritative. Citations help users
+verify claims. The UI and documentation should encourage verification,
+especially for academic, medical, legal, or financial documents.</p>
+<p>The report acknowledges AI-assisted tool use because the assessment
+guidance permits such tools only as supplementary aids and requires
+responsible acknowledgement. This is part of professional practice. The
+team remains accountable for the final design, implementation, and
+submitted material.</p>
+<h2 id="overall-outcome">5.12 Overall Outcome</h2>
+<p>Overall, the project achieved its main objective. It produced a
+working local-first multimodal personal knowledge base QA
+proof-of-concept. The system is coherent, demonstrable, and aligned with
+the proposed scope. It implements document upload, local processing,
+chunking, retrieval, answer generation, and citation display.</p>
+<p>The project also demonstrates design maturity. It includes fallback
+paths, clear status values, modular services, typed frontend API calls,
+and documentation. It does not hide limitations. Instead, it makes them
+explicit and identifies realistic future improvements.</p>
+<p>The final outcome is therefore successful for the intended assessment
+context. It is not a finished product, but it is a strong foundation for
+continued development and a credible demonstration of software design
+and implementation capability.</p>
+<h1 id="conclusion-and-future-work">6. Conclusion and Future Work</h1>
+<h2 id="conclusion">6.1 Conclusion</h2>
+<p>The Multimodal Personal Knowledge Base Question Answering System
+successfully demonstrates the proposed local-first RAG workflow. It
+allows users to upload personal documents, process them locally,
+retrieve relevant chunks, ask natural language questions, and view
+answers with citations. The implementation uses a clear layered
+architecture, separates frontend and backend responsibilities, stores
+data locally, and integrates DeepSeek official API for generated answers
+when configured.</p>
+<p>The system is not a complete commercial knowledge management product,
+but it is a credible proof-of-concept. It implements the core
+functionality from the proposal and aligns with the course requirement
+to demonstrate software design and implementation capability. Its
+strongest features are the end-to-end workflow, local-first data
+handling, structured citations, modular backend services, and graceful
+fallback behaviour.</p>
+<p>The project also reveals realistic limitations. OCR depends on
+external installation, retrieval quality needs broader evaluation, large
+document processing should move to background jobs, and source
+verification would benefit from richer document viewers. These
+limitations do not undermine the proof-of-concept; rather, they identify
+clear next steps.</p>
+<h2 id="future-work">6.2 Future Work</h2>
+<p>The first future improvement is background processing. Uploads should
+immediately create a document record, then processing should run
+asynchronously. The frontend could poll status or receive WebSocket
+updates. This would improve responsiveness for large PDFs and OCR-heavy
+files.</p>
+<p>The second improvement is a richer citation viewer. Users should be
+able to click a citation and open the exact PDF page or image region.
+This would make source verification faster and more trustworthy.</p>
+<p>The third improvement is stronger retrieval. The semantic retrieval
+path should be fully installed and evaluated with a question set. Hybrid
+search combining lexical and semantic scores could improve precision.
+Reranking could also be added before prompt construction.</p>
+<p>The fourth improvement is encrypted local storage. Sensitive users
+would benefit from encrypting original files and extracted chunks at
+rest. This would require careful key management and recovery design.</p>
+<p>The fifth improvement is broader format support. Markdown, DOCX,
+PPTX, CSV, and HTML are realistic additions. Each format should preserve
+metadata and source location information where possible.</p>
+<p>The sixth improvement is better prompt templates. Different task
+modes could be introduced, such as concise answer, study summary,
+compare documents, generate revision questions, or extract action items.
+Each mode would require a different prompt and possibly different
+retrieval strategy.</p>
+<p>The seventh improvement is usability testing. Representative users
+should be asked to perform upload, search, and QA tasks. Their feedback
+could guide UI refinements and reveal confusing states.</p>
+<p>The eighth improvement is production packaging. A simple desktop
+installer or one-command launcher would make the system easier for
+non-technical users to run. This could include dependency checks for
+Tesseract and optional ML packages.</p>
+<h1 id="references">References</h1>
+<ol type="1">
+<li>FastAPI documentation. Available at:
+https://fastapi.tiangolo.com/</li>
+<li>React documentation. Available at: https://react.dev/</li>
+<li>Vite documentation. Available at: https://vite.dev/</li>
+<li>SQLite documentation. Available at:
+https://www.sqlite.org/docs.html</li>
+<li>SQLModel documentation. Available at:
+https://sqlmodel.tiangolo.com/</li>
+<li>PyMuPDF documentation. Available at:
+https://pymupdf.readthedocs.io/</li>
+<li>Tesseract OCR documentation. Available at:
+https://tesseract-ocr.github.io/</li>
+<li>FAISS documentation. Available at: https://faiss.ai/</li>
+<li>SentenceTransformers documentation. Available at:
+https://www.sbert.net/</li>
+<li>DeepSeek API documentation. Available at:
+https://api-docs.deepseek.com/</li>
+<li>Lewis, P. et al. Retrieval-Augmented Generation for
+Knowledge-Intensive NLP Tasks. Advances in Neural Information Processing
+Systems, 2020.</li>
+<li>Schwaber, K. and Sutherland, J. The Scrum Guide. Available at:
+https://scrumguides.org/</li>
+<li>Fielding, R. T. Architectural Styles and the Design of Network-based
+Software Architectures. Doctoral dissertation, University of California,
+Irvine, 2000.</li>
+<li>Jones, M., Bradley, J., and Sakimura, N. JSON Web Token (JWT). RFC
+7519, 2015.</li>
+</ol>
+<h1
+id="appendix-a-mapping-of-assessment-expectations-to-report-content">Appendix
+A: Mapping of Assessment Expectations to Report Content</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Assessment expectation</th>
+<th>Where addressed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introduction and system overview</td>
+<td>Section 1</td>
+</tr>
+<tr>
+<td>System architecture and design decisions</td>
+<td>Section 2</td>
+</tr>
+<tr>
+<td>Implementation and technology stack</td>
+<td>Section 3</td>
+</tr>
+<tr>
+<td>Development process and reflection</td>
+<td>Section 4</td>
+</tr>
+<tr>
+<td>Evaluation of outcomes</td>
+<td>Section 5</td>
+</tr>
+<tr>
+<td>Conclusion and future work</td>
+<td>Section 6</td>
+</tr>
+<tr>
+<td>References below 20 items</td>
+<td>References section</td>
+</tr>
+<tr>
+<td>No source code included</td>
+<td>The report describes behaviour, design, and interfaces without code
+listings</td>
+</tr>
+<tr>
+<td>AI-assisted tool acknowledgement</td>
+<td>Section 4.6</td>
+</tr>
+</tbody>
+</table>
+<h1 id="appendix-b-proof-of-concept-feature-summary">Appendix B:
+Proof-of-Concept Feature Summary</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Implemented state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User registration and login</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Protected document and QA endpoints</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>TXT upload and extraction</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>PDF text extraction</td>
+<td>Implemented through PyMuPDF</td>
+</tr>
+<tr>
+<td>Image OCR</td>
+<td>Implemented when Tesseract is installed</td>
+</tr>
+<tr>
+<td>Text cleaning</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Chunking with page metadata</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Chunk persistence</td>
+<td>Implemented through SQLite</td>
+</tr>
+<tr>
+<td>Local retrieval</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Optional semantic retrieval</td>
+<td>Designed through SentenceTransformers and FAISS path</td>
+</tr>
+<tr>
+<td>DeepSeek answer generation</td>
+<td>Implemented when <code>DEEPSEEK_API_KEY</code> is configured</td>
+</tr>
+<tr>
+<td>Fallback answer</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Citation display</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Frontend document management</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Frontend chat interface</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Automated backend tests</td>
+<td>Implemented</td>
+</tr>
+<tr>
+<td>Frontend production build check</td>
+<td>Implemented</td>
+</tr>
+</tbody>
+</table>
+<h1 id="appendix-c-installation-and-demonstration-notes">Appendix C:
+Installation and Demonstration Notes</h1>
+<p>The proof-of-concept can be demonstrated locally by running the
+backend and frontend in separate terminals. The backend should be
+started from <code>apps/api</code>, and the frontend should be started
+from <code>apps/web</code>. The user should configure
+<code>DEEPSEEK_API_KEY</code> in <code>.env</code> if generated answers
+are required. Without the key, the system still demonstrates retrieval
+and citation output through local fallback answering.</p>
+<p>A typical demonstration uses the following sequence:</p>
+<ol type="1">
+<li>Start the backend.</li>
+<li>Start the frontend.</li>
+<li>Open the frontend in a browser.</li>
+<li>Register or log in.</li>
+<li>Upload a sample TXT or PDF file.</li>
+<li>Confirm the document reaches <code>indexed</code> status.</li>
+<li>Ask a question related to the document.</li>
+<li>Inspect the generated answer and citation list.</li>
+</ol>
+<p>This demonstration directly maps to the central project objective:
+local document ingestion followed by explainable question answering.</p>
+</body>
+</html>

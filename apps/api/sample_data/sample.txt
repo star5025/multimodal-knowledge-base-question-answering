@@ -1,0 +1,6 @@
+Multimodal Personal Knowledge Base QA is a local-first application.
+
+The system can upload documents, extract text, build searchable chunks, retrieve relevant passages, and answer questions with citations.
+
+Privacy is important. Original files stay on local storage. Retrieval happens locally. External LLM services receive only the selected context snippets when an API key is configured.
+
