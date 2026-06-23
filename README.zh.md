@@ -2,6 +2,16 @@
 
 **中文** | [English](./README.md)
 
+## 📚 快速导航
+
+- **[核心技术教程](./TUTORIAL.md)** - 深入讲解 RAG、OCR、BM25 算法及系统架构
+- **项目结构：**
+  - [`apps/api/`](./apps/api/) - FastAPI 后端，包含文档处理、RAG 检索、LLM 集成
+  - [`apps/web/`](./apps/web/) - React + TypeScript 前端，包含文档管理和聊天界面
+  - [`docs/`](./docs/) - API 接口文档、架构设计、项目报告
+  - [`scripts/`](./scripts/) - 自动化测试与验证脚本
+  - [`tools/`](./tools/) - 开发辅助工具脚本
+
 ## 重要配置说明
 
 在运行此项目前，请基于 `.env.example` 创建本地 `.env` 文件，并配置所需的 API 密钥。

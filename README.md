@@ -2,6 +2,16 @@
 
 [中文](./README.zh.md) | **English**
 
+## 📚 Quick Navigation
+
+- **[Core Technology Tutorial](./TUTORIAL.md)** - Deep dive into RAG, OCR, BM25, and system architecture
+- **Project Structure:**
+  - [`apps/api/`](./apps/api/) - FastAPI backend with document processing, RAG retrieval, and LLM integration
+  - [`apps/web/`](./apps/web/) - React + TypeScript frontend with document management and chat interface
+  - [`docs/`](./docs/) - API contracts, architecture design, and project reports
+  - [`scripts/`](./scripts/) - Automated testing and verification scripts
+  - [`tools/`](./tools/) - Utility scripts for development
+
 ## Important Configuration Notice
 
 Before running this project, create a local `.env` file from `.env.example` and configure the required API keys.
