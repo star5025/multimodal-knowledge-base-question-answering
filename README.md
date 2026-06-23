@@ -1,5 +1,7 @@
 # Multimodal Personal Knowledge Base Question Answering System
 
+[中文](./README.zh.md) | **English**
+
 ## Important Configuration Notice
 
 Before running this project, create a local `.env` file from `.env.example` and configure the required API keys.
